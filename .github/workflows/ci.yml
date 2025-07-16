@@ -1,0 +1,53 @@
+name: Libft CI
+
+# push／PR のたびに実行
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. リポジトリを取得
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. 依存ツールインストール（gcc, make など）
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      # 3. libftディレクトリに移動してビルド
+      - name: Build libft
+        run: |
+          cd libft
+          make
+
+      # 4. アーカイブ中身チェック（libft.a が生成されているか確認）
+      - name: Verify archive
+        run: |
+          cd libft
+          ls -l libft.a
+          ar t libft.a
+
+      # 5. サンプルプログラムをコンパイルして動作確認
+      - name: Compile example
+        run: |
+          cd libft
+          gcc -L . -lft ../examples/main.c -o example
+
+      - name: Run example
+        run: |
+          cd libft
+          ./example
+
+      # 6. クリーンアップ
+      - name: Cleanup
+        run: |
+          cd libft
+          make fclean
