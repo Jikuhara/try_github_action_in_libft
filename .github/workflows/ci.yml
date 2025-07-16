@@ -39,7 +39,7 @@ jobs:
       - name: Compile example
         run: |
           cd libft
-          gcc -L . -lft ../examples/main.c -o example
+          gcc -I. -L . -lft ../examples/main.c -o example
 
       - name: Run example
         run: |
